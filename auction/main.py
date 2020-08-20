@@ -14,7 +14,7 @@ def auction(list_of_bidders, bids_list):
         site = item['site']
         units = item['units']
         d = {'bidder': [''] * len(units), 'bid': [0] * len(units), 'adjusted bid': [0] * len(units)}
-        auction = pd.DataFrame(data=d, index=units)
+        auction_data = pd.DataFrame(data=d, index=units)
 
         # check if valid website
         if site in site_names:
@@ -22,7 +22,7 @@ def auction(list_of_bidders, bids_list):
             # get floor value
             floor = site_floor[index]
 
-        # check if valid bidder, unit, and bid above floor
+            # check if valid bidder, unit, and bid above floor
             for bid in item['bids']:
                 if bid['bidder'] in site_bidders and bid['unit'] in units and bid['bid'] > floor:
                     # adjust bids of bidders
@@ -32,16 +32,23 @@ def auction(list_of_bidders, bids_list):
                     adjust = (1 + adjustment) * bid['bid']
                     if adjust > floor:
                         # test for highest bidder
-                        cur_unit = auction.loc[str(bid['unit'])]
+                        cur_unit = auction_data.loc[str(bid['unit'])]
                         if adjust > cur_unit['adjusted bid']:
-                            auction.loc[str(bid['unit'])] = [bid['bidder'], bid['bid'], adjust]
-                            
-            print(json.dumps(auction[['bidder', 'bid']].to_dict()))
+                            auction_data.loc[str(bid['unit'])] = [bid['bidder'], bid['bid'], adjust]
+
+            for index, row in auction_data.iterrows():
+                auction_test = {str(site): {'bidder': row['bidder'],
+                                                'bid': row['bid'],
+                                                'unit': index}}
+                print(json.dumps(auction_test))
+
         else:
-            print(json.dumps(auction[['bidder', 'bid']].to_dict()))
+            print(json.dumps({'bidder': '',
+                              'bid': '',
+                              'unit': ''}))
 
 
-with open('auction/config.json') as config:
+with open('./config.json') as config:
     configuration = json.load(config)
 
 incoming_input = json.load(sys.stdin)
