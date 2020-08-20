@@ -8,9 +8,11 @@ def auction(list_of_bidders, bids_list):
     site_bidders = [item['bidders'] for item in list_of_bidders['sites']][0]
     site_floor = [item['floor'] for item in list_of_bidders['sites']]
     bidder_adjustment = [item['adjustment'] for item in list_of_bidders['bidders']]
-
+    auction_results = []
     # go through bids in input file
+    count = 0
     for item in bids_list:
+        auction_results.append([])
         site = item['site']
         units = item['units']
         d = {'bidder': [''] * len(units), 'bid': [0] * len(units), 'adjusted bid': [0] * len(units)}
@@ -35,13 +37,12 @@ def auction(list_of_bidders, bids_list):
                         cur_unit = auction_data.loc[str(bid['unit'])]
                         if adjust > cur_unit['adjusted bid']:
                             auction_data.loc[str(bid['unit'])] = [bid['bidder'], bid['bid'], adjust]
-
             for index, row in auction_data.iterrows():
-                auction_test = {str(site): {'bidder': row['bidder'],
+                auction_results[count].append({'bidder': row['bidder'],
                                                 'bid': row['bid'],
-                                                'unit': index}}
-                print(json.dumps(auction_test))
-
+                                                'unit': index})
+            print(json.dumps(auction_results))
+            count += 1
         else:
             print(json.dumps({'bidder': '',
                               'bid': '',
