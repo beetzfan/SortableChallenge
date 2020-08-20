@@ -41,7 +41,7 @@ def auction(list_of_bidders, bids_list):
             sys.stdout.write(json.dumps(auction[['bidder', 'bid']].to_dict()))
 
 
-with open('./config.json') as config:
+with open('auction/config.json') as config:
     configuration = json.load(config)
 
 incoming_input = json.load(sys.stdin)
