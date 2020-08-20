@@ -36,9 +36,9 @@ def auction(list_of_bidders, bids_list):
                         if adjust > cur_unit['adjusted bid']:
                             auction.loc[str(bid['unit'])] = [bid['bidder'], bid['bid'], adjust]
                             
-            sys.stdout.write(json.dumps(auction[['bidder', 'bid']].to_dict()))
+            print(json.dumps(auction[['bidder', 'bid']].to_dict()))
         else:
-            sys.stdout.write(json.dumps(auction[['bidder', 'bid']].to_dict()))
+            print(json.dumps(auction[['bidder', 'bid']].to_dict()))
 
 
 with open('auction/config.json') as config:
